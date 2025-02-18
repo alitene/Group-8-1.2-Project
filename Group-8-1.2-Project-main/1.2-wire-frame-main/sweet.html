@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe App Wireframe</title>
+</head>
+<style>
+    *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+    
+    h1{
+        font-size: 3rem;
+        position: relative;
+        top: 2rem;
+    }
+}
+nav{
+    display: flex;
+    position: relative;
+    top: 3rem;
+    margin-left: 10rem;
+    margin-right: 10rem;
+
+}
+
+.container{
+    display: flex;
+    position: relative;
+    top: 8rem;
+    left: 10rem;
+
+    .sweet-list{
+        .one , .two, .three{
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            
+            h3{
+                margin-right: 1rem;
+                text-decoration: underline;
+            }
+            button{
+                margin-right: 1rem;
+            }        
+        }
+    }
+}
+
+.add-order{
+    position: relative;
+    top: 10rem;
+    left: 10rem;
+}
+</style>
+<body>
+
+    <!-- for the header -->
+   <header>
+    <h1>Welcome to the Recipe</h1>
+   </header>
+
+   <nav>
+        <div class="dish">
+            <a href="index.html">
+                <button style="cursor: pointer; font-size: 2rem; width: 6rem; margin-right: 1rem;">DISH</button>
+            </a>
+        </div>
+
+        <div class="Sweets">
+            <button style="cursor: pointer; font-size: 2rem; width: 10rem; background-color: rgb(117, 238, 147); margin-right: 1rem;">SWEETS</button>
+        </div>
+
+        <div class="desert">
+            <a href="desert.html">
+                <button style="cursor: pointer; font-size: 2rem; width: 10rem;margin-right: 1rem;">DESERT</button>
+            </a>
+        </div>
+
+        <div class="add-section">
+            <button style="cursor: pointer; font-size: 1rem; width: 20rem; background-color: rgb(42, 120, 237);margin-right: 1rem; color: aliceblue;">ADD/DELETE <br>SECTION</button>
+        </div>
+   </nav>
+
+<div class="container">
+    <div class="sweet-list">
+        <h1>List</h1>
+            <div class="one">
+                <h3>1.Apple Pie</h3>
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    View
+                </button>
+                
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    Edite
+                </button>  
+    
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    Delete
+                </button>          
+            </div>
+
+            <div class="two">
+                <h3>1.Chocolate Cookie</h3>
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    View
+                </button>
+                
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    Edite
+                </button>  
+    
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    Delete
+                </button>          
+            </div>
+
+            <div class="three">
+                <h3>1.Brownie</h3>
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    View
+                </button>
+                
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    Edite
+                </button>  
+    
+                <button style="background-color: rgb(172, 205, 247); height: 2rem; font-size: 1rem; text-decoration: none; width: 3.5rem; cursor: pointer;">
+                    Delete
+                </button>          
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add more order -->
+ <div class="add-order">
+    <button style="font-size: 2rem; background-color: greenyellow;cursor: pointer;">
+        Add Recipe
+    </button>
+ </div>
+
+</body>
