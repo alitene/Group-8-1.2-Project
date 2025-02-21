@@ -1,1 +1,82 @@
+-- Drop tables if they already exist to prevent conflicts
+DROP TABLE IF EXISTS dessert, sweets, dish, recipe_categories, recipes CASCADE;
 
+-- Table for recipe categories (Dish, Sweets, Dessert)
+CREATE TABLE recipe_categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Table for recipes (Generalized for all categories)
+CREATE TABLE recipes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    category_id INT REFERENCES recipe_categories(id) ON DELETE CASCADE,
+    description TEXT,
+    ingredients TEXT NOT NULL,
+    instructions TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Dish table (links to the recipes table)
+CREATE TABLE dish (
+    id SERIAL PRIMARY KEY,
+    recipe_id INT REFERENCES recipes(id) ON DELETE CASCADE,
+    spice_level VARCHAR(20) CHECK (spice_level IN ('Mild', 'Medium', 'Hot', 'Extra Hot')),
+    cooking_time INT CHECK (cooking_time > 0) -- Time in minutes
+);
+
+-- Sweets table (links to the recipes table)
+CREATE TABLE sweets (
+    id SERIAL PRIMARY KEY,
+    recipe_id INT REFERENCES recipes(id) ON DELETE CASCADE,
+    sweetness_level VARCHAR(20) CHECK (sweetness_level IN ('Low', 'Medium', 'High', 'Very High')),
+    is_sugar_free BOOLEAN DEFAULT FALSE
+);
+
+-- Dessert table (links to the recipes table)
+CREATE TABLE dessert (
+    id SERIAL PRIMARY KEY,
+    recipe_id INT REFERENCES recipes(id) ON DELETE CASCADE,
+    has_dairy BOOLEAN DEFAULT TRUE,
+    is_frozen BOOLEAN DEFAULT FALSE
+);
+
+-- Insert predefined categories
+INSERT INTO recipe_categories (name) VALUES 
+('Dish'), 
+('Sweets'), 
+('Dessert');
+
+-- Sample data for recipes
+INSERT INTO recipes (name, category_id, description, ingredients, instructions) VALUES 
+('Pizza', 1, 'A classic cheese pizza.', 'Flour, Tomato Sauce, Cheese', 'Mix dough, add toppings, bake at 400°F.'),
+('Steak', 1, 'Grilled steak with seasoning.', 'Beef, Salt, Pepper', 'Season steak and grill to desired doneness.'),
+('BBQ Ribs', 1, 'Smoky and tender BBQ ribs.', 'Pork Ribs, BBQ Sauce', 'Marinate ribs and slow-cook for 3 hours.'),
+('Apple Pie', 2, 'Traditional apple pie with cinnamon.', 'Apples, Sugar, Flour', 'Prepare dough, add filling, bake.'),
+('Chocolate Cookie', 2, 'Crunchy chocolate chip cookies.', 'Flour, Chocolate Chips, Sugar', 'Mix ingredients, shape dough, bake.'),
+('Brownie', 2, 'Fudgy chocolate brownies.', 'Cocoa, Butter, Sugar', 'Mix, bake at 350°F for 25 minutes.'),
+('Ice Cream', 3, 'Creamy vanilla ice cream.', 'Milk, Sugar, Vanilla', 'Churn ingredients and freeze.'),
+('Cheesecake', 3, 'Rich and creamy cheesecake.', 'Cream Cheese, Sugar, Graham Cracker', 'Mix, bake, chill before serving.'),
+('Tiramisu', 3, 'Italian coffee-flavored dessert.', 'Ladyfingers, Coffee, Mascarpone', 'Layer ingredients and chill.');
+
+-- Sample data for dish, sweets, and dessert tables
+INSERT INTO dish (recipe_id, spice_level, cooking_time) VALUES 
+(1, 'Mild', 20), 
+(2, 'Medium', 15), 
+(3, 'Hot', 180);
+
+INSERT INTO sweets (recipe_id, sweetness_level, is_sugar_free) VALUES 
+(4, 'High', FALSE), 
+(5, 'Medium', FALSE), 
+(6, 'Very High', FALSE);
+
+INSERT INTO dessert (recipe_id, has_dairy, is_frozen) VALUES 
+(7, TRUE, TRUE), 
+(8, TRUE, FALSE), 
+(9, TRUE, FALSE);
+
+-- Query to retrieve all recipes with their categories
+SELECT recipes.id, recipes.name, recipe_categories.name AS category, recipes.description 
+FROM recipes
+JOIN recipe_categories ON recipes.category_id = recipe_categories.id;
