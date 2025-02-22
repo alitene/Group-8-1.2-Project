@@ -1,58 +1,60 @@
-package edu.cmcc.cpt.cpt_245_week_4.Classes;
+package edu.cmcc.cpt.demo.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
-public class ClassesController {
+@RequestMapping("/api/users")
+public class UserController {
 
-  @Autowired
-  private jdbcTemplate jdbcTemplate;
+    @Autowired
+    private UserRepository userRepository;
 
-  @GetMapping
-  public List<classes> getAllClasses() {
-        String sql = "SELECT * FROM classes;";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-          Classes classes = new Classes();
-          classes.setClassCode(rs.getString(columnLabel: "class_code"));
-          classes.setClassName(rs.getString(columnLabel: "class_code"));
-          return classes;
-           
-        });
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    @GetMapping("/{class_code}")
-    public Student getClassByCode(@PathVariable String class_code) {
-        String sql = "SELECT * FROM classes WHERE class_code = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
-          Classes classes = new Classes();
-          classes.setClassCode(rs.getString(columnLabel: "class_code"));
-          classes.setClassName(rs.getString(columnLabel: "class_code"));
-          return classes;
-        });
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        User user = userRepository.findById(id);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public void createClass(@RequestBody Classes classes) {
-        String sql = "INSERT INTO classes (class_code, class_name) VALUES (?, ?)";
-        jdbcTemplate.update(sql, classes.getClassCode(), classes.getClassName());
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
+        userRepository.save(user);
+        return ResponseEntity.ok("User created successfully with encrypted password.");
     }
 
-    @PutMapping("/{class_code}")
-    public void updateStudent(@PathVariable String class_code, @RequestBody Classes classes) {
-        String sql = "UPDATE classes SET class_name = ?, WHERE class_code = ?";
-        jdbcTemplate.update(sql, classes.getClassName(), class_code);
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User submittedUser) {
+        User user = userRepository.findByUsername(submittedUser.getUsername());
+        if (user != null && passwordEncoder.matches(user.getPassword(), user.getPassword())) {
+            return ResponseEntity.ok("Login successful.");
+        } else {
+            return ResponseEntity.status(401).body("Invalid username or password.");
+        }
     }
 
-    @DeleteMapping("/{class_code}")
-    public void deleteClass(@PathVariable String class_code) {
-        String sql = "DELETE FROM classes WHERE class_code = ?";
-        jdbcTemplate.update(sql, class_code);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable int id, @RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
+        int rowsAffected = userRepository.update(id, user);
+        return rowsAffected > 0 ? ResponseEntity.ok("User updated.") : ResponseEntity.notFound().build();
     }
-}
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+        int rowsAffected = userRepository.deleteById(id);
+        return rowsAffected > 0 ? ResponseEntity.ok("User deleted.") : ResponseEntity.notFound().build();
+    }
 }
