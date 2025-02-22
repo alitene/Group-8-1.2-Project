@@ -1,40 +1,45 @@
-package edu.cmcc.cpt.cpt_245_week_4.Classes;
+package edu.cmcc.cpt.demo.User;
 
-public class Classes {
-    
-    private String class_code;
-    private String class_name;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-    // Constructors
-    public Classes() {
+import java.util.List;
+
+@Repository
+public class UserRepository {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public List<User> findAll() {
+        String sql = "SELECT id, first_name, last_name, username FROM [user]";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
 
-    public Classes(String class_code, String class_name) {
-        setClassCode(class_code);
-        setClassName(class_name);
+    public User findById(int id) {
+        String sql = "SELECT id, first_name, last_name, username FROM [user] WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), id);
     }
 
-    // Getters and Setters
-
-    public String getClassCode() {
-        return class_code;
+    public User findByUsername(String username) {
+        String sql = "SELECT id, first_name, last_name, username FROM [user] WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
     }
 
-    public void setClassCode(String class_code) {
-        if (class_code == null || class_code.isEmpty()) {
-            throw new IllegalArgumentException("Class code cannot be null or empty");
-        }
-        this.class_code = class_code;
+    public int save(User user) {
+        String sql = "INSERT INTO [user] (first_name, last_name, password) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getPassword());
     }
 
-    public String getClassName() {
-        return class_name;
+    public int update(int id, User user) {
+        String sql = "UPDATE [user] SET first_name = ?, last_name = ?, password = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getPassword(), id);
     }
 
-    public void setClassName(String class_name) {
-        if (class_name == null || class_name.isEmpty()) {
-            throw new IllegalArgumentException("Class name cannot be null or empty");
-        }
-        this.class_name = class_name;
+    public int deleteById(int id) {
+        String sql = "DELETE FROM [user] WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }
