@@ -9,28 +9,28 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @GetMapping
+    @Getall
     public List<Recipe> getAllRecipes() {
         return recipeService.getAllRecipes();
     }
 
-    @GetMapping("/{id}")
+    @Getbyid("/{id}")
     public Recipe getRecipeById(@PathVariable Long id) {
         return recipeService.getRecipeById(id);
     }
 
-    @PostMapping
+    @Postrecipe
     public Recipe createRecipe(@RequestBody Recipe recipe) {
         return recipeService.saveRecipe(recipe);
     }
 
-    @PutMapping("/{id}")
+    @Updaterecipe("/{id}")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
         recipe.setId(id);
         return recipeService.saveRecipe(recipe);
     }
 
-    @DeleteMapping("/{id}")
+    @Deleterecipe("/{id}")
     public void deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
     }
