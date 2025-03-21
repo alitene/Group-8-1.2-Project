@@ -15,18 +15,21 @@ public class RecipeController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
-    public List<Recipe> getAllRecipes() {
-        return recipeService.getAllRecipes();
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Recipe getRecipeById(@PathVariable Long id) {
-        return recipeService.getRecipeById(id);
+     @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        User user = userRepository.findById(id);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public Recipe createRecipe(@RequestBody Recipe recipe) {
-        return recipeService.saveRecipe(recipe);
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
+        userRepository.save(user);
+        return ResponseEntity.ok("User created successfully with encrypted password.");
     }
 
     @PostMapping("/login")
@@ -43,10 +46,12 @@ public class RecipeController {
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
         recipe.setId(id);
         return recipeService.saveRecipe(recipe);
+        return rowsAffected > 0 ? ResponseEntity.ok("User updated.") : ResponseEntity.notFound().build()
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRecipe(@PathVariable Long id) {
-        recipeService.deleteRecipe(id);
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+        int rowsAffected = userRepository.deleteById(id);
+        return rowsAffected > 0 ? ResponseEntity.ok("User deleted.") : ResponseEntity.notFound().build();
     }
 }
