@@ -9,28 +9,38 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @Getall
+    @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.getAllRecipes();
     }
 
-    @Getbyid("/{id}")
+    @GetMapping("/{id}")
     public Recipe getRecipeById(@PathVariable Long id) {
         return recipeService.getRecipeById(id);
     }
 
-    @Postrecipe
+    @PostMapping
     public Recipe createRecipe(@RequestBody Recipe recipe) {
         return recipeService.saveRecipe(recipe);
     }
 
-    @Updaterecipe("/{id}")
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User submittedUser) {
+        User user = userRepository.findByUsername(submittedUser.getUsername());
+        if (user != null && passwordEncoder.matches(user.getPassword(), user.getPassword())) {
+            return ResponseEntity.ok("Login successful.");
+        } else {
+            return ResponseEntity.status(401).body("Invalid username or password.");
+        }
+    }
+
+    @PutMapping("/{id}")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
         recipe.setId(id);
         return recipeService.saveRecipe(recipe);
     }
 
-    @Deleterecipe("/{id}")
+    @DeleteMapping("/{id}")
     public void deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
     }
