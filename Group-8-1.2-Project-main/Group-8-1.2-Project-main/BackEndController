@@ -9,6 +9,9 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.getAllRecipes();
