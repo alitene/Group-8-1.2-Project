@@ -1,4 +1,4 @@
-package edu.cmcc.cpt.demo.User;
+package  Group-8-1.2-Project-main.Group-8-1.2-Project-main;
 
 public class User {
     private int id;
